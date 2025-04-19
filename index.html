@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🔭 Universe Finder 🌌</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+      background: linear-gradient(135deg, purple, blue);
+      color: white;
+      transition: background 0.5s ease;
+    }
+    h1 {
+      font-size: 45px;
+      text-shadow: 0 0 15px #00ffff, 0 0 30px #ff00ff, 0 0 45px #ff00ff;
+      animation: glow 1.5s ease-in-out infinite alternate;
+    }
+    @keyframes glow {
+      0% { text-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff, 0 0 30px #ff00ff; }
+      100% { text-shadow: 0 0 20px #ff00ff, 0 0 30px #ff00ff, 0 0 50px #ff00ff; }
+    }
+    .home-container {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .start-button {
+      padding: 20px 40px;
+      font-size: 20px;
+      background-color: #00ffff;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+      box-shadow: 0 0 15px rgba(0, 255, 255, 0.7);
+    }
+    .start-button:hover {
+      background-color: green;
+      transform: scale(1.1);
+      box-shadow: 0 0 25px green;
+    }
+    #game-section { display: none; }
+    #game-board {
+      display: grid;
+      gap: 6px;
+      justify-content: center;
+      margin: 20px auto;
+    }
+    .card {
+      width: 45px;
+      height: 45px;
+      background: linear-gradient(135deg, #ff00ff, #00ffff);
+      border-radius: 2.5px;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+      position: relative;
+      box-shadow: 0 0 10px black;
+      perspective: 100px;
+    }
+    .card .inner {
+      transform-style: preserve-3d;
+      transition: transform 0.3s;
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      transform: rotateY(180deg);
+    }
+    .card.flipped .inner { transform: rotateY(0deg); }
+    .card .emoji, .card .hidden {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 25px;
+      backface-visibility: hidden;
+    }
+    .card .hidden {
+      background: linear-gradient(135deg, yellow, red);
+      transform: rotateY(180deg);
+    }
+    .card.match {
+      background: linear-gradient(135deg, orange, lime);
+      color: white;
+      box-shadow: 0 0 15px rgba(0, 255, 0, 0.7);
+    }
+    .level-buttons button {
+      padding: 10px 10px;
+      font-size: 16px;
+      margin: 5px;
+      cursor: pointer;
+      border: none;
+      border-radius: 5px;
+      transition: 0.3s;
+    }
+    .level-buttons button:hover {
+      background: linear-gradient(135deg, #ff00ff, #00ffff);
+      color: black;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Background Music -->
+<audio id="bgm" autoplay loop>
+  <source src="https://files.freemusicarchive.org/storage-freemusicarchive-org/music/no_curator/Komiku/Komiku_-_Its_time_for_adventure/Komiku_-_03_-_Battle_Of_Pogs.mp3" type="audio/mpeg">
+  Your browser does not support the audio element.
+</audio>
+
+<!-- Home Screen -->
+<div id="home-section" class="home-container">
+  <h1>🔭 Universe Finder 🌌</h1>
+  <h2>Are You Ready To Find Universal Things?</h2>
+  <button class="start-button" onclick="showGameSection()">Start Game</button>
+</div>
+
+<!-- Game Screen -->
+<div id="game-section">
+  <h1>🔭 Universe Finder 🌌</h1>
+
+  <div id="difficulty-screen" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 60vh;">
+    <h2>Select a Difficulty</h2>
+    <div class="level-buttons">
+      <button onclick="startGame('easy')">Easy (2x2)</button>
+      <button onclick="startGame('medium')">Medium (4x4)</button>
+      <button onclick="startGame('hard')">Hard (6x6)</button>
+      <button onclick="startGame('dangerous')">Dangerous (8x8)</button>
+    </div>
+  </div>
+
+  <div id="winner-screen" style="display:none;">
+    <h2>You Are Winner!</h2>
+    <button onclick="nextLevel()">OK</button>
+  </div>
+
+  <p>⏰ Time: <span id="timer">0</span> sec | 🔄 Moves: <span id="moves">0</span></p>
+
+  <div id="game-board"></div>
+</div>
+
+<script>
+  const emojiSets = {
+    easy: ["🪐", "🌍"],
+    medium: ["👽", "🛰️", "🛸", "☄️", "🌠", "🪐", "🌕", "🌍"],
+    hard: ["👾", "🧬", "📡", "🦸", "🤺", "☀️", "🌟", "💫", "👽", "🌑", "☄️", "👨‍🚀", "🛰️", "🛸", "🌠", "🪐", "🌕", "🌍"],
+    dangerous: ["👾", "🧬", "📡", "🦸", "🤺", "☀️", "🌟", "💫", "👽", "🌑", "☄️", "👨‍🚀", "🛰️", "🛸", "🌠", "🪐", "🌕", "🌍","🦠","🎇","☢️","⚠️","🕉️","⚕️","🎵","🔇","♀️","♂️","♐","❤️","👹","👼"]
+  };
+
+  let firstCard = null, secondCard = null;
+  let lockBoard = false;
+  let moves = 0, timer = 0, timerInterval = null;
+  let currentLevel = "";
+  const levelOrder = ["easy", "medium", "hard", "dangerous"];
+
+  function showGameSection() {
+    document.getElementById("home-section").style.display = "none";
+    document.getElementById("game-section").style.display = "block";
+  }
+
+  function shuffle(array) {
+    return array.sort(() => 0.5 - Math.random());
+  }
+
+  function startGame(level) {
+    currentLevel = level;
+    document.getElementById("difficulty-screen").style.display = "none";
+    document.getElementById("winner-screen").style.display = "none";
+
+    const gameBoard = document.getElementById("game-board");
+    gameBoard.innerHTML = "";
+
+    let gridSize, emojis;
+    if (level === "easy") {
+      gridSize = 2;
+      emojis = emojiSets.easy;
+    } else if (level === "medium") {
+      gridSize = 4;
+      emojis = emojiSets.medium;
+    } else if (level === "hard") {
+      gridSize = 6;
+      emojis = emojiSets.hard;
+    } else {
+      gridSize = 8;
+      emojis = emojiSets.dangerous;
+    }
+
+    gameBoard.style.gridTemplateColumns = `repeat(${gridSize}, 60px)`;
+
+    moves = 0;
+    timer = 0;
+    lockBoard = true;
+    clearInterval(timerInterval);
+    document.getElementById("timer").innerText = timer;
+    document.getElementById("moves").innerText = moves;
+
+    timerInterval = setInterval(() => {
+      timer++;
+      document.getElementById("timer").innerText = timer;
+    }, 1000);
+
+    const cards = shuffle([...emojis, ...emojis]);
+
+    cards.forEach((emoji) => {
+      const card = document.createElement("div");
+      card.classList.add("card");
+      card.dataset.emoji = emoji;
+
+      const inner = document.createElement("div");
+      inner.classList.add("inner");
+
+      const emojiFront = document.createElement("div");
+      emojiFront.classList.add("emoji");
+      emojiFront.innerHTML = emoji;
+
+      const emojiBack = document.createElement("div");
+      emojiBack.classList.add("hidden");
+      emojiBack.innerHTML = "🔭";
+
+      inner.appendChild(emojiBack);
+      inner.appendChild(emojiFront);
+      card.appendChild(inner);
+      gameBoard.appendChild(card);
+    });
+
+    setTimeout(() => {
+      document.querySelectorAll(".card").forEach(card => card.classList.add("flipped"));
+    }, 500);
+
+    setTimeout(() => {
+      document.querySelectorAll(".card").forEach(card => {
+        card.classList.remove("flipped");
+        card.addEventListener("click", flipCard);
+      });
+      lockBoard = false;
+    }, 3000);
+  }
+
+  function flipCard() {
+    if (lockBoard || this === firstCard) return;
+
+    this.classList.add("flipped");
+
+    if (!firstCard) {
+      firstCard = this;
+    } else {
+      secondCard = this;
+      moves++;
+      document.getElementById("moves").innerText = moves;
+      checkForMatch();
+    }
+  }
+
+  function resetBoard() {
+    firstCard = null;
+    secondCard = null;
+    lockBoard = false;
+  }
+
+  function checkForMatch() {
+    lockBoard = true;
+    const isMatch = firstCard.dataset.emoji === secondCard.dataset.emoji;
+
+    if (isMatch) {
+      firstCard.classList.add("match");
+      secondCard.classList.add("match");
+      firstCard.removeEventListener("click", flipCard);
+      secondCard.removeEventListener("click", flipCard);
+      resetBoard();
+      checkWin();
+    } else {
+      setTimeout(() => {
+        firstCard.classList.remove("flipped");
+        secondCard.classList.remove("flipped");
+        resetBoard();
+      }, 1000);
+    }
+  }
+
+  function checkWin() {
+    if (document.querySelectorAll(".card:not(.match)").length === 0) {
+      clearInterval(timerInterval);
+      setTimeout(() => {
+        document.getElementById("winner-screen").style.display = "block";
+      }, 500);
+    }
+  }
+
+  function nextLevel() {
+    const nextIndex = levelOrder.indexOf(currentLevel) + 1;
+    if (nextIndex < levelOrder.length) {
+      startGame(levelOrder[nextIndex]);
+    } else {
+      alert("All levels complete!");
+      document.getElementById("difficulty-screen").style.display = "flex";
+    }
+  }
+</script>
+
+</body>
+</html>

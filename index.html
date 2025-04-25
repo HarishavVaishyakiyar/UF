@@ -183,7 +183,7 @@
   function startBGM() {
   const audio = document.getElementById("bgm");
   audio.muted = false; // Unmute after interaction
-  audio.volume = 0.5;   // Set desired volume
+  audio.volume = 1.0;   // Set desired volume
   audio.play().catch(err => console.warn("Autoplay error:", err));
 }
 

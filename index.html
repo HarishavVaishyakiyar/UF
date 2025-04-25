@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Splash Screen</title>
+  <style>
+    body {
+      margin: 0;
+      background: url('bg.jpg') no-repeat center center fixed;
+      background-size: cover;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      color: white;
+      font-family: 'Segoe UI', sans-serif;
+      text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.8);
+    }
+
+    img {
+      max-width: 200px;
+      height: auto;
+    }
+
+    h1 {
+      margin-top: 20px;
+      font-size: 28px;
+      letter-spacing: 1px;
+    }
+  </style>
+  <script>
+    setTimeout(() => {
+      window.location.href = 'index2.html';
+    }, 3000);
+  </script>
+</head>
+<body>
+  <img src="logo.png" alt="Logo" />
+  <h1>Universe Finder</h1>
+</body>
+</html>

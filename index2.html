@@ -66,13 +66,13 @@
       transform: scale(0.7);
     }
 
-    #game-board {
-  display: grid;
-  place-items: center;
-  grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
-  height: 70vh;
-  margin: auto;
+#game-board {
+  min-height: 50vh;
+  margin: 0 auto;
   gap: 10px;
+  display: grid; /* Important */
+  justify-content: center;
+  align-content: center;
 }
 
 

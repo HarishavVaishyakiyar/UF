@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Universe Finder - Home</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      overflow: hidden;
+      font-family: 'Segoe UI', sans-serif;
+      background: url('space_bg_home.jpg') center/cover no-repeat;
+      position: relative;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .overlay {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: 0;
+    }
+
+    .content {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+    }
+
+    .logo {
+      width: 120px;
+      margin-bottom: 15px;
+      animation: fadeIn 2s ease-out forwards;
+    }
+
+    .title {
+      font-size: 3rem;
+      margin-bottom: 30px;
+      text-shadow: 0 0 10px cyan, 0 0 20px magenta;
+      animation: fadeIn 2s ease-out 1s forwards;
+      opacity: 0;
+    }
+
+    .start-btn {
+      padding: 15px 30px;
+      font-size: 1.2rem;
+      background: linear-gradient(45deg, #00ffff, #ff00ff);
+      border: none;
+      border-radius: 50px;
+      box-shadow: 0 0 15px #00ffffaa;
+      cursor: pointer;
+      animation: fadeIn 2s ease-out 2s forwards;
+      opacity: 0;
+      transition: 0.3s;
+    }
+
+    .start-btn:hover {
+      transform: scale(1.1);
+      background: linear-gradient(45deg, #ff00ff, #00ffff);
+      box-shadow: 0 0 25px magenta;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.8); }
+      to { opacity: 1; transform: scale(1); }
+    }
+  </style>
+</head>
+<body>
+
+
+<audio id="bgm" muted preload="auto" loop>
+  <source src="bgm.mp3" type="audio/mpeg" />
+</audio>
+
+<div class="overlay"></div>
+
+<div class="content">
+  <img src="logo.png" alt="Logo" class="logo">
+  <h1 class="title">🔭 Universe Finder 🌌</h1>
+  <button class="start-btn" onclick="window.location.href='index2.html'">Start Game</button>
+</div>
+
+</body>
+</html>
